@@ -20,7 +20,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Map<String, String> headers = new HashMap<>();
-        CustomRequest<ForexQuote> quoteRequest = new CustomRequest<>("", ForexQuote.class, headers, responseListener, errorListener);
+        Map<String, String> params = new HashMap<>();
+        CustomRequest<ForexQuote> quoteRequest = new CustomRequest<>("", ForexQuote.class, headers, params,
+                responseListener, errorListener);
         NetworkManager.getInstance(this).addToRequestQue(quoteRequest);
     }
 
