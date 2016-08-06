@@ -2,14 +2,22 @@ package com.ramram.android.simpleforexapp;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.ramram.android.simpleforexapp.adapter.QuotesAdapter;
 import com.ramram.android.simpleforexapp.model.ForexQuote;
 import com.ramram.android.simpleforexapp.model.QuotesResponse;
 import com.ramram.android.simpleforexapp.network.NetworkManager;
@@ -31,13 +39,38 @@ public class MainActivity extends AppCompatActivity {
     private Handler mHandler = new Handler();
     private List<String> currencyList = new ArrayList<>();
 
+    private Toolbar mToolbar;
+    private CoordinatorLayout coordinatorLayout;
+    private FloatingActionButton fab;
+    private RecyclerView recyclerView;
+    private QuotesAdapter mAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        fab.setOnClickListener(clickListener);
+
+        setSupportActionBar(mToolbar);
+
+        initQuotesList();
         initDefaultCurrency();
         requestData();
+
+
+    }
+
+    private void initQuotesList(){
+        mAdapter = new QuotesAdapter(mQuotesList, false);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(mAdapter);
     }
 
     private void initDefaultCurrency(){
@@ -60,17 +93,20 @@ public class MainActivity extends AppCompatActivity {
         NetworkManager.getInstance(this).addToRequestQue(quoteRequest);
     }
 
+    View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+        }
+    };
+
 
     Response.Listener<QuotesResponse> responseListener = new Response.Listener<QuotesResponse>() {
         @Override
         public void onResponse(QuotesResponse quotesResponse) {
             mQuotesList = quotesResponse.getQuoteList();
             //mHandler.postDelayed(RequestScheduler, REQUEST_DELAY);
-            Log.d(TAG, "@Quotes list size " + mQuotesList.size());
-            Log.d(TAG, "@Received sessionId - " + quotesResponse.getSessionId());
-            for(ForexQuote quote : mQuotesList){
-                Log.d(TAG, "Quote - " + quote.getCurrency());
-            }
+            mAdapter.notifyDataSetChanged();
         }
     };
 
