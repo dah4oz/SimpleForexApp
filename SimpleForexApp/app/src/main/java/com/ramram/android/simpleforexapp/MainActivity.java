@@ -62,11 +62,22 @@ public class MainActivity extends AppCompatActivity {
         initDefaultCurrency();
         requestData();
 
+    }
 
+    @Override
+    protected void onStop() {
+        mHandler.removeCallbacks(RequestScheduler);
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        RequestScheduler = null;
+        super.onDestroy();
     }
 
     private void initQuotesList(){
-        mAdapter = new QuotesAdapter(mQuotesList, false);
+        mAdapter = new QuotesAdapter(mQuotesList, false, getApplicationContext());
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -82,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void requestData(){
         Map<String, String> headers = new HashMap<>();
-        headers.put("ASP.NET_SessionId", "");
+        headers.put("ASP.NET_SessionId", sessionId);
 
         Map<String, String> params = new HashMap<>();
         params.put("languageCode", "en-US");
@@ -105,9 +116,10 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onResponse(QuotesResponse quotesResponse) {
             mQuotesList = quotesResponse.getQuoteList();
-            //mHandler.postDelayed(RequestScheduler, REQUEST_DELAY);
-            mAdapter = new QuotesAdapter(mQuotesList, false);
+            mAdapter = new QuotesAdapter(mQuotesList, false, getApplicationContext());
             recyclerView.setAdapter(mAdapter);
+            sessionId = quotesResponse.getSessionId();
+            mHandler.postDelayed(RequestScheduler, REQUEST_DELAY);
         }
     };
 

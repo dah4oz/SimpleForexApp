@@ -1,5 +1,7 @@
 package com.ramram.android.simpleforexapp.adapter;
 
+import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,11 +22,13 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.MyViewHold
 
     private static final String TAG = QuotesAdapter.class.getSimpleName();
     private boolean isGrid;
+    private Context context;
     private List<ForexQuote> quoteList;
 
-    public QuotesAdapter(List<ForexQuote> list, boolean useGrid){
+    public QuotesAdapter(List<ForexQuote> list, boolean useGrid, Context ctx){
         quoteList = list;
         isGrid = useGrid;
+        context = ctx;
     }
 
     @Override
@@ -38,6 +42,16 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.MyViewHold
     @Override
     public void onBindViewHolder(QuotesAdapter.MyViewHolder holder, int position) {
         ForexQuote quote = quoteList.get(position);
+
+        if(quote.getChangeOrientation() == 1){
+            holder.buyTv.setTextColor(ContextCompat.getColor(context, R.color.color_up));
+            holder.sellTv.setTextColor(ContextCompat.getColor(context, R.color.color_up));
+        }
+        else if(quote.getChangeOrientation() == 2){
+            holder.buyTv.setTextColor(ContextCompat.getColor(context, R.color.color_down));
+            holder.sellTv.setTextColor(ContextCompat.getColor(context, R.color.color_down));
+        }
+
         holder.buyTv.setText(String.format("%.4f", quote.getbId()));
         holder.sellTv.setText(String.format("%.4f", quote.getAsk()));
         holder.currencyTv.setText(quote.getCurrency());
