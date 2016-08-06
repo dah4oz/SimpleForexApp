@@ -1,5 +1,7 @@
 package com.ramram.android.simpleforexapp.network;
 
+import android.util.Log;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -16,6 +18,7 @@ import java.util.Map;
  */
 public class CustomRequest<T> extends Request<T>{
 
+    private static final String TAG = CustomRequest.class.getSimpleName();
     private Gson gson = new Gson();
     private final Class<T> clazz;
     private final Map<String, String> headers;
@@ -47,6 +50,12 @@ public class CustomRequest<T> extends Request<T>{
 
     @Override
     protected Response<T> parseNetworkResponse(NetworkResponse networkResponse) {
+
+        Map<String, String> headers = networkResponse.headers;
+        for(Map.Entry<String, String> entry : headers.entrySet()){
+            Log.d(TAG, "@Header key: " + entry.getKey() + " header value - " + entry.getValue());
+        }
+
         try {
             String json = new String(networkResponse.data, HttpHeaderParser.parseCharset(networkResponse.headers));
             return Response.success(gson.fromJson(json, clazz), HttpHeaderParser.parseCacheHeaders(networkResponse));
