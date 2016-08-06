@@ -7,12 +7,13 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.ramram.android.simpleforexapp.model.ForexQuote;
 import com.ramram.android.simpleforexapp.model.QuotesResponse;
-import com.ramram.android.simpleforexapp.network.CustomRequest;
 import com.ramram.android.simpleforexapp.network.NetworkManager;
+import com.ramram.android.simpleforexapp.network.QuotesRequest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String REQUEST_URL = "http://eu.tradenetworks.com/QuotesBox/quotes/GetQuotesBySymbols";
     private static final int REQUEST_DELAY = 500;
 
+    private String sessionId;
     private List<ForexQuote> mQuotesList = new ArrayList<>();
     private Handler mHandler = new Handler();
     private List<String> currencyList = new ArrayList<>();
@@ -48,10 +50,12 @@ public class MainActivity extends AppCompatActivity {
     private void requestData(){
         Map<String, String> headers = new HashMap<>();
         headers.put("ASP.NET_SessionId", "");
+
         Map<String, String> params = new HashMap<>();
         params.put("languageCode", "en-US");
         params.put("symbols", TextUtils.join(",", currencyList));
-        CustomRequest<QuotesResponse> quoteRequest = new CustomRequest<>(REQUEST_URL, QuotesResponse.class, headers, params,
+
+        QuotesRequest quoteRequest = new QuotesRequest(Request.Method.POST, REQUEST_URL, headers, params,
                 responseListener, errorListener);
         NetworkManager.getInstance(this).addToRequestQue(quoteRequest);
     }
@@ -63,6 +67,10 @@ public class MainActivity extends AppCompatActivity {
             mQuotesList = quotesResponse.getQuoteList();
             //mHandler.postDelayed(RequestScheduler, REQUEST_DELAY);
             Log.d(TAG, "@Quotes list size " + mQuotesList.size());
+            Log.d(TAG, "@Received sessionId - " + quotesResponse.getSessionId());
+            for(ForexQuote quote : mQuotesList){
+                Log.d(TAG, "Quote - " + quote.getCurrency());
+            }
         }
     };
 
