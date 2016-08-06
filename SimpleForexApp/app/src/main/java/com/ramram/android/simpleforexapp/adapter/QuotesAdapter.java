@@ -1,6 +1,7 @@
 package com.ramram.android.simpleforexapp.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import java.util.List;
  */
 public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.MyViewHolder>{
 
+    private static final String TAG = QuotesAdapter.class.getSimpleName();
     private boolean isGrid;
     private List<ForexQuote> quoteList;
 
@@ -38,8 +40,11 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.MyViewHold
         ForexQuote quote = quoteList.get(position);
         holder.buyTv.setText(String.format("%.4f", quote.getbId()));
         holder.sellTv.setText(String.format("%.4f", quote.getAsk()));
+        holder.currencyTv.setText(quote.getCurrency());
         holder.sellBtn.setOnClickListener(clickListener);
         holder.sellBtn.setOnClickListener(clickListener);
+
+        Log.d(TAG, "@Bound - " + quote.getCurrency());
     }
 
     @Override
@@ -56,7 +61,7 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.MyViewHold
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView buyTv, sellTv;
+        TextView buyTv, sellTv, currencyTv;
         Button buyBtn, sellBtn;
 
         public MyViewHolder(View view) {
@@ -65,6 +70,7 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.MyViewHold
             buyTv = (TextView) view.findViewById(R.id.buy_tv);
             sellBtn = (Button) view.findViewById(R.id.sell_btn);
             sellTv = (TextView) view.findViewById(R.id.sell_tv);
+            currencyTv = (TextView) view.findViewById(R.id.currency_tv);
         }
     }
 }

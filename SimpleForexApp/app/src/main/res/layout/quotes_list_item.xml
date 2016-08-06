@@ -3,8 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:padding="@dimen/general_spacing"
+    android:background="@android:color/white"
     >
 
     <TextView
@@ -12,8 +13,9 @@
         android:layout_width="0dp"
         android:layout_weight="0.2"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/regular_text_size"
+        android:textSize="@dimen/small_text_size"
         android:textColor="@android:color/black"
+        android:layout_centerVertical="true"
         />
 
     <RelativeLayout
@@ -26,18 +28,19 @@
             android:id="@+id/sell_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/regular_text_size"
+            android:textSize="@dimen/small_text_size"
             android:textColor="@android:color/black"
             android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
             />
 
         <Button
             android:id="@+id/sell_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/regular_text_size"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="@dimen/button_height"
+            android:textSize="@dimen/small_text_size"
             android:text="@string/sell_str"
-            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@id/sell_tv"
             />
 
     </RelativeLayout>
@@ -52,18 +55,19 @@
             android:id="@+id/buy_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/regular_text_size"
+            android:textSize="@dimen/small_text_size"
             android:textColor="@android:color/black"
             android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
             />
 
         <Button
             android:id="@+id/buy_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/regular_text_size"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="@dimen/button_height"
+            android:textSize="@dimen/small_text_size"
             android:text="@string/buy_str"
-            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@id/buy_tv"
             />
 
     </RelativeLayout>

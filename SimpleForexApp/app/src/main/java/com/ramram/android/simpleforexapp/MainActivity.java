@@ -106,7 +106,8 @@ public class MainActivity extends AppCompatActivity {
         public void onResponse(QuotesResponse quotesResponse) {
             mQuotesList = quotesResponse.getQuoteList();
             //mHandler.postDelayed(RequestScheduler, REQUEST_DELAY);
-            mAdapter.notifyDataSetChanged();
+            mAdapter = new QuotesAdapter(mQuotesList, false);
+            recyclerView.setAdapter(mAdapter);
         }
     };
 
