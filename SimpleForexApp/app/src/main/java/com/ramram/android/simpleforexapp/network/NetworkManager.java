@@ -41,7 +41,7 @@ public class NetworkManager {
         getRequestQueue().add(request);
     }
 
-    public boolean isOnline() {
+    public static boolean isOnline() {
         if(mCtx == null){
             return false;
         }

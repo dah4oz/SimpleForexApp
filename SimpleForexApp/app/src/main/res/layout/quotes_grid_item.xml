@@ -87,7 +87,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/small_text_size"
-                android:text="@string/buy_str"
+                android:text="@string/sell_str"
                 android:layout_below="@id/sell_tv"
                 />
 

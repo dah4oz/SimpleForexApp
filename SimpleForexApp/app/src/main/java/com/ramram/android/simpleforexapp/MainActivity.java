@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements CurrencyOptionsDi
     private static final String REQUEST_URL = "http://eu.tradenetworks.com/QuotesBox/quotes/GetQuotesBySymbols";
     private static final int REQUEST_DELAY = 500;
 
-    private boolean isGrid = true;
+    private boolean isGrid;
     private String sessionId;
     private List<ForexQuote> mQuotesList = new ArrayList<>();
     private Handler mHandler = new Handler();
@@ -107,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements CurrencyOptionsDi
     }
 
     private void initQuotesList(){
-        mAdapter = new QuotesAdapter(mQuotesList, isGrid, getApplicationContext());
+        mAdapter = new QuotesAdapter(mQuotesList, isGrid, getApplicationContext(), currencyActionSelectedListener);
         RecyclerView.LayoutManager mLayoutManager = isGrid ? new GridLayoutManager(this, 2) :
                 new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
@@ -122,7 +123,22 @@ public class MainActivity extends AppCompatActivity implements CurrencyOptionsDi
         selectedCurrencyList.add("USDJPY");
     }
 
+    QuotesAdapter.OnCurrencyActionSelectedListener currencyActionSelectedListener = new QuotesAdapter.OnCurrencyActionSelectedListener() {
+        @Override
+        public void onActionSelected(String currencyName, float value) {
+            Snackbar snackbar = Snackbar.make(coordinatorLayout, "Currency - " + currencyName + " rate - " + value, Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
+    };
+
     private void requestData(){
+
+        if(!NetworkManager.isOnline()){
+            Snackbar snackbar = Snackbar.make(coordinatorLayout, R.string.no_net_alert, Snackbar.LENGTH_LONG);
+            snackbar.show();
+            return;
+        }
+
         Map<String, String> headers = new HashMap<>();
         headers.put("ASP.NET_SessionId", sessionId);
 
