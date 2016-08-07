@@ -41,11 +41,8 @@ public class NetworkManager {
         getRequestQueue().add(request);
     }
 
-    public static boolean isOnline() {
-        if(mCtx == null){
-            return false;
-        }
-        ConnectivityManager cm = (ConnectivityManager) mCtx.getSystemService(Context.CONNECTIVITY_SERVICE);
+    public static boolean isOnline(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo nInfo = cm.getActiveNetworkInfo();
 
         if(nInfo != null && nInfo.isConnectedOrConnecting()) {
@@ -54,7 +51,6 @@ public class NetworkManager {
         else {
             return false;
         }
-
     }
 
 

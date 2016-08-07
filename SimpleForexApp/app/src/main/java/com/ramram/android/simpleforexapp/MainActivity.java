@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity implements CurrencyOptionsDi
     private List<ForexQuote> mQuotesList = new ArrayList<>();
     private Handler mHandler = new Handler();
     private List<String> selectedCurrencyList = new ArrayList<>();
-    private List<String> currencyList = new ArrayList<>();
 
     private Toolbar mToolbar;
     private CoordinatorLayout coordinatorLayout;
@@ -133,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements CurrencyOptionsDi
 
     private void requestData(){
 
-        if(!NetworkManager.isOnline()){
+        if(!NetworkManager.isOnline(getApplicationContext())){
             Snackbar snackbar = Snackbar.make(coordinatorLayout, R.string.no_net_alert, Snackbar.LENGTH_LONG);
             snackbar.show();
             return;
