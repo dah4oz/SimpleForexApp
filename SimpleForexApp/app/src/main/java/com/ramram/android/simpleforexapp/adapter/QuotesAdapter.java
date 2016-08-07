@@ -3,7 +3,6 @@ package com.ramram.android.simpleforexapp.adapter;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,8 +56,6 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.MyViewHold
         holder.currencyTv.setText(quote.getCurrency());
         holder.sellBtn.setOnClickListener(clickListener);
         holder.sellBtn.setOnClickListener(clickListener);
-
-        Log.d(TAG, "@Bound - " + quote.getCurrency());
     }
 
     @Override

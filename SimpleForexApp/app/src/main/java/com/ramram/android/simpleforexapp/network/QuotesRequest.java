@@ -1,7 +1,5 @@
 package com.ramram.android.simpleforexapp.network;
 
-import android.util.Log;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -39,9 +37,6 @@ public class QuotesRequest extends Request<QuotesResponse> {
 
     @Override
     protected Map<String, String> getParams() throws AuthFailureError {
-        for(Map.Entry<String, String> param : params.entrySet()){
-            Log.d(TAG, "@param - " + param.getKey() + " value - " + param.getValue());
-        }
         return params != null ? params : super.getParams();
     }
 

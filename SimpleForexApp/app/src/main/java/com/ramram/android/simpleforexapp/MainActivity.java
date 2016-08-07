@@ -31,7 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements CurrencyOptionsDialogFragment.OnCurrencySelectedListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final String REQUEST_URL = "http://eu.tradenetworks.com/QuotesBox/quotes/GetQuotesBySymbols";
@@ -59,7 +59,13 @@ public class MainActivity extends AppCompatActivity {
         fab = (FloatingActionButton) findViewById(R.id.fab);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        fab.setOnClickListener(clickListener);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CurrencyOptionsDialogFragment fragment = CurrencyOptionsDialogFragment.newInstance(selectedCurrencyList);
+                fragment.show(getSupportFragmentManager(), "CurrencyOptionsDialogFragment");
+            }
+        });
 
         setSupportActionBar(mToolbar);
 
@@ -129,13 +135,6 @@ public class MainActivity extends AppCompatActivity {
         NetworkManager.getInstance(this).addToRequestQue(quoteRequest);
     }
 
-    View.OnClickListener clickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-
-        }
-    };
-
 
     Response.Listener<QuotesResponse> responseListener = new Response.Listener<QuotesResponse>() {
         @Override
@@ -166,4 +165,11 @@ public class MainActivity extends AppCompatActivity {
             requestData();
         }
     };
+
+    @Override
+    public void currencySelected(List<String> selected) {
+        selectedCurrencyList.clear();
+        selectedCurrencyList.addAll(selected);
+        requestData();
+    }
 }
