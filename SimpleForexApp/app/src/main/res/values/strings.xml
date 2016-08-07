@@ -2,4 +2,7 @@
     <string name="app_name">SimpleForexApp</string>
     <string name="sell_str">Sell</string>
     <string name="buy_str">Buy</string>
+    <string name="options">Options</string>
+    <string name="list">List</string>
+    <string name="grid">Grid</string>
 </resources>

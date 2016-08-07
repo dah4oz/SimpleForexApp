@@ -6,11 +6,14 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.android.volley.NetworkResponse;
@@ -34,9 +37,11 @@ public class MainActivity extends AppCompatActivity {
     private static final String REQUEST_URL = "http://eu.tradenetworks.com/QuotesBox/quotes/GetQuotesBySymbols";
     private static final int REQUEST_DELAY = 500;
 
+    private boolean isGrid = true;
     private String sessionId;
     private List<ForexQuote> mQuotesList = new ArrayList<>();
     private Handler mHandler = new Handler();
+    private List<String> selectedCurrencyList = new ArrayList<>();
     private List<String> currencyList = new ArrayList<>();
 
     private Toolbar mToolbar;
@@ -76,19 +81,39 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.menu_row){
+            isGrid = false;
+            initQuotesList();
+        }
+        else if(item.getItemId() == R.id.menu_grid){
+            isGrid = true;
+            initQuotesList();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void initQuotesList(){
-        mAdapter = new QuotesAdapter(mQuotesList, false, getApplicationContext());
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        mAdapter = new QuotesAdapter(mQuotesList, isGrid, getApplicationContext());
+        RecyclerView.LayoutManager mLayoutManager = isGrid ? new GridLayoutManager(this, 2) :
+                new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
     }
 
     private void initDefaultCurrency(){
-        currencyList.add("EURUSD");
-        currencyList.add("GBPUSD");
-        currencyList.add("USDCHF");
-        currencyList.add("USDJPY");
+        selectedCurrencyList.add("EURUSD");
+        selectedCurrencyList.add("GBPUSD");
+        selectedCurrencyList.add("USDCHF");
+        selectedCurrencyList.add("USDJPY");
     }
 
     private void requestData(){
@@ -97,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
 
         Map<String, String> params = new HashMap<>();
         params.put("languageCode", "en-US");
-        params.put("symbols", TextUtils.join(",", currencyList));
+        params.put("symbols", TextUtils.join(",", selectedCurrencyList));
 
         QuotesRequest quoteRequest = new QuotesRequest(Request.Method.POST, REQUEST_URL, headers, params,
                 responseListener, errorListener);
@@ -116,9 +141,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onResponse(QuotesResponse quotesResponse) {
             mQuotesList = quotesResponse.getQuoteList();
-            mAdapter = new QuotesAdapter(mQuotesList, false, getApplicationContext());
-            recyclerView.setAdapter(mAdapter);
             sessionId = quotesResponse.getSessionId();
+            initQuotesList();
             mHandler.postDelayed(RequestScheduler, REQUEST_DELAY);
         }
     };
